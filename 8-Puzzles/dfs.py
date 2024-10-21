@@ -6,18 +6,18 @@ class dfsAgent:
         self.goal = 12345678
         self.initial_State = self.prepare_initial_state(initial_State)
     def dfs(self):
-        stack = []
-        stack.append(self.initial_State)
+        stack = set()
+        stack.add(self.initial_State)
         while stack:
             current = stack.pop()
+            self.explored.add(current)
             if current == self.goal:
                 print(current)
-                # self.get_path(current)
-                return self.path
-            if current not in self.explored:
-                self.explored.add(current)
-                for child in self.get_children(current):
-                    stack.append(child)
+                self.get_path(current)
+                return self.path , len(self.explored)
+            for child in self.get_children(current):
+                if (child not in self.explored) and (child not in stack):
+                    stack.add(child)
                     self.parent[child] = current
 
         return None
@@ -37,14 +37,17 @@ class dfsAgent:
         if len(state) != 9:
             state = '0' + state
         zero_index = state.index('0')
-        if zero_index != 0 and zero_index != 1 and zero_index != 2:
-            children.append(int(self.swap(state, zero_index, zero_index - 3)))
         if zero_index != 0 and zero_index != 3 and zero_index != 6:
             children.append(int(self.swap(state, zero_index, zero_index - 1)))
-        if zero_index != 6 and zero_index != 7 and zero_index != 8:
-            children.append(int(self.swap(state, zero_index, zero_index + 3)))
         if zero_index != 2 and zero_index != 5 and zero_index != 8:
             children.append(int(self.swap(state, zero_index, zero_index + 1)))
+        if zero_index != 0 and zero_index != 1 and zero_index != 2:
+            children.append(int(self.swap(state, zero_index, zero_index - 3)))
+
+        if zero_index != 6 and zero_index != 7 and zero_index != 8:
+            children.append(int(self.swap(state, zero_index, zero_index + 3)))
+
+
         return children
     def swap(self, state: str, i: int, j: int) -> str:
         state = list(state)
@@ -52,10 +55,14 @@ class dfsAgent:
         return ''.join(state)
     def get_path(self, state: int):
         if state == self.initial_State:
+            self.path.append(state)
             return
         self.path.append(state)
-        print(state)
         self.get_path(self.parent[state])
-l = dfsAgent([[1,0,2], [3,4,5], [6, 7, 8]])
-
+l = dfsAgent([[0,2,1], [4,3,5], [6, 7, 8]])
+# print(l.get_children(l.initial_State))
+# stack = []
+# stack.append(l.initial_State)
+# stack.append(258741369)
+# print(l.initial_State not in stack)
 print(l.dfs())
