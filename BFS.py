@@ -47,6 +47,24 @@ class BFSAgent:
                 intial += initial_State[i][j] * (10 ** k)
                 k -= 1
         return intial
+   
+    def not_in_queue(self, state, queue):
+        size = queue.qsize()
+        found = False
+        temp_list = []
+        
+        for _ in range(size):
+            s = queue.get()
+            if state == s:
+                found = True
+            temp_list.append(s)
+        
+        for item in temp_list:
+            queue.put(item)
+        
+        return not found  
+
+
     
     def BFS (self):
         res = self.BFS_()
@@ -65,10 +83,8 @@ class BFSAgent:
             
     def BFS_ (self):
         start_time = time.time()
-        frontier_set = set()
         frontier = Queue()
         frontier.put(self.initial_State)
-        frontier_set.add(self.initial_State)
         parent ={}
         while(not frontier.empty()):
             state = frontier.get()
@@ -80,9 +96,8 @@ class BFSAgent:
             
             children = self.get_children(state)
             for child in children:
-                if child[0] not in self.explored and child[0] not in frontier_set:
+                if child[0] not in self.explored and self.not_in_queue(child[0],frontier):
                     frontier.put(child[0])
-                    frontier_set.add(child[0])
                     self.parent[child[0]] = (state,child[1])
         end_time = time.time()
        
@@ -93,9 +108,9 @@ class BFSAgent:
 
 
 l = BFSAgent(
-[[1, 0, 2],
- [3, 4, 5],
- [6, 7, 8]]
+[[3, 2, 8],
+ [4, 5, 1],
+ [6, 7, 0]]
 )
 res =l.BFS()
 
