@@ -12,21 +12,21 @@ class IdsAgent:
 
     def iterative_dfs(self):
         limit = 0
-        last_explored = 0
-        while True:
+        start_time = time.time()
+        while limit <= 32:
             self.explored = set()
             self.path = []
             self.parent = {}
-            path, path_length, explored_length, max_depth, running_time = self.dfs(limit)
+            path, path_length, explored_length, max_depth = self.dfs(limit)
             if path:
-                return path, path_length, explored_length, max_depth, running_time
-            if last_explored == explored_length:
-                return None, None, explored_length, max_depth, running_time
-            last_explored = explored_length
+                end_time = time.time()
+                return path, path_length, explored_length, max_depth, end_time - start_time
             limit += 1
+        end_time = time.time()
+        return None, None, None, 32, end_time - start_time
 
     def dfs(self, limit: int):
-        start_time = time.time()
+
         stack = [(self.initial_State, 0)]
         max_depth = 0
         while stack:
@@ -35,15 +35,13 @@ class IdsAgent:
             self.explored.add(current)
             if current == self.goal:
                 self.get_path(current)
-                end_time = time.time()
-                return self.path, len(self.path), len(self.explored), max_depth, end_time - start_time
+                return self.path, len(self.path), len(self.explored), max_depth
             if level < limit:
                 for child in self.get_children(current):
                     if (child[0] not in self.explored) and (self.not_in_stack(child[0], stack)):
                         stack.append((child[0], level + 1))
                         self.parent[child[0]] = (current, child[1])
-        end_time = time.time()
-        return None, None, len(self.explored), max_depth, end_time - start_time
+        return None, None, len(self.explored), max_depth
 
     def not_in_stack(self, state: int, stack: list) -> bool:
         for s in stack:
