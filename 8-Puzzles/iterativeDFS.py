@@ -1,6 +1,8 @@
 import time
 
-class DfsAgent:
+
+class IdsAgent:
+
     def __init__(self, initial_State):
         self.explored = set()
         self.path = []
@@ -8,7 +10,22 @@ class DfsAgent:
         self.goal = 12345678
         self.initial_State = self.prepare_initial_state(initial_State)
 
-    def dfs(self):
+    def iterative_dfs(self):
+        limit = 0
+        last_explored = 0
+        while True:
+            self.explored = set()
+            self.path = []
+            self.parent = {}
+            path, path_length, explored_length, max_depth, running_time = self.dfs(limit)
+            if path:
+                return path, path_length, explored_length, max_depth, running_time
+            if last_explored == explored_length:
+                return None, None, explored_length, max_depth, running_time
+            last_explored = explored_length
+            limit += 1
+
+    def dfs(self, limit: int):
         start_time = time.time()
         stack = [(self.initial_State, 0)]
         max_depth = 0
@@ -20,10 +37,11 @@ class DfsAgent:
                 self.get_path(current)
                 end_time = time.time()
                 return self.path, len(self.path), len(self.explored), max_depth, end_time - start_time
-            for child in self.get_children(current):
-                if (child[0] not in self.explored) and (self.not_in_stack(child[0], stack)):
-                    stack.append((child[0], level + 1))
-                    self.parent[child[0]] = (current, child[1])
+            if level < limit:
+                for child in self.get_children(current):
+                    if (child[0] not in self.explored) and (self.not_in_stack(child[0], stack)):
+                        stack.append((child[0], level + 1))
+                        self.parent[child[0]] = (current, child[1])
         end_time = time.time()
         return None, None, len(self.explored), max_depth, end_time - start_time
 
@@ -71,4 +89,5 @@ class DfsAgent:
             state = self.parent[state][0]
         self.path.reverse()
         return
+
 
