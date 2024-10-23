@@ -1,7 +1,7 @@
 from queue import Queue
 import queue
 import time
-from typing import List, Set
+from typing import List, Set, Tuple
 
 class BFSAgent:
     def __init__(self, initial_State):
@@ -11,20 +11,22 @@ class BFSAgent:
         self.goal = 12345678
         self.initial_State = self.prepare_initial_State(initial_State)
 
-    def get_children(self, state: int) -> list[tuple[int, str]]:
+      
+    def get_children(self, state: int) -> list[Tuple[int, str]]:
         children = []
         state = str(state)
         if len(state) != 9:
             state = '0' + state
         zero_index = state.index('0')
-        if zero_index != 0 and zero_index != 1 and zero_index != 2:
-            children.append((int(self.swap(state, zero_index, zero_index - 3)),'UP'))
-        if zero_index != 6 and zero_index != 7 and zero_index != 8:
-            children.append((int(self.swap(state, zero_index, zero_index + 3)),'DOWN'))
-        if zero_index != 0 and zero_index != 3 and zero_index != 6:
-            children.append((int(self.swap(state, zero_index, zero_index - 1)),"LEFT"))
-        if zero_index != 2 and zero_index != 5 and zero_index != 8:
-            children.append((int(self.swap(state, zero_index, zero_index + 1)),"RIGHT"))
+        if zero_index % 3 != 2:
+            children.append((int(self.swap(state, zero_index, zero_index + 1)), "right"))
+        if zero_index + 3 < 9:
+            children.append((int(self.swap(state, zero_index, zero_index + 3)), "down"))
+        if zero_index % 3 != 0:
+            children.append((int(self.swap(state, zero_index, zero_index - 1)), "left"))
+        if zero_index - 3 >= 0:
+            children.append((int(self.swap(state, zero_index, zero_index - 3)), "up"))
+
         return children
     
     def swap(self, state: str, i: int, j: int) -> str:
