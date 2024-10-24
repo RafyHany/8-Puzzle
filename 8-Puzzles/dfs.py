@@ -72,3 +72,5 @@ class DfsAgent:
         self.path.reverse()
         return
 
+ids = DfsAgent([[0,3,5], [4,2,8], [6,1,7]])
+print(ids.dfs())
