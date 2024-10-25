@@ -14,6 +14,7 @@ class IdsAgent:
 
     def iterative_dfs(self):
         limit = 0
+        total_explored = 0
         start_time = time.time()
         while limit <= 32:
 
@@ -21,9 +22,10 @@ class IdsAgent:
             self.path = []
             self.parent = {}
             path, path_length, expand_length, max_depth = self.dfs(limit)
+            total_explored += expand_length
             if path:
                 end_time = time.time()
-                return path, path_length, expand_length, max_depth, end_time - start_time
+                return path, path_length, total_explored, max_depth, end_time - start_time
             limit += 1
         end_time = time.time()
         return None, None, None, 32, end_time - start_time
@@ -48,7 +50,7 @@ class IdsAgent:
 
     def not_in_stack(self, state: int, stack: list , level) -> bool:
         for s in stack:
-            if s[0] == state and s[1] < level + 1 :
+            if s[0] == state and s[1] <= level + 1 :
                 return False
         return True
 
@@ -95,14 +97,14 @@ class IdsAgent:
         self.path.reverse()
         return
 
-#
-# ids = IdsAgent([[8,6,7], [2,5,4], [3,0,1]])
-# print(ids.iterative_dfs())
+
+ids = IdsAgent([[3,2,8], [4,5,1], [6,7,0]])
+print(ids.iterative_dfs())
 #
 #
 # # [[0,3,5], [4,2,8], [6,1,7]] 10
 # # [[3,2,8], [4,5,1], [6,7,0]] 12
-# #[[3,2,8], [4,5,1], [6,0,7]]
+# #[[3,2,8], [4,5,1], [6,0,7]] 11
 #
 # # ([(305428617, 'right'), (325408617, 'down'), (325418607, 'down'), (325418670, 'right'), (325410678, 'up'), (320415678, 'up'), (302415678, 'left'), (312405678, 'down'), (312045678, 'left'), (12345678, 'up')],
 # # ([(305428617, 'right'), (325408617, 'down'), (325418607, 'down'), (325418670, 'right'), (325410678, 'up'), (320415678, 'up'), (302415678, 'left'), (312405678, 'down'), (312045678, 'left'), (12345678, 'up')], 10, 242, 10, 0.001993417739868164)
