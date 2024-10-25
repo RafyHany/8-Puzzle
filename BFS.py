@@ -12,7 +12,7 @@ class BFSAgent:
         self.initial_State = self.prepare_initial_State(initial_State)
 
       
-     def get_children(self, state: int) -> list[tuple[int, str]]:
+    def get_children(self, state: int) -> list[Tuple[int, str]]:
         children = []
         state = str(state)
         if len(state) != 9:
@@ -48,23 +48,10 @@ class BFSAgent:
                 intial += initial_State[i][j] * (10 ** k)
                 k -= 1
         return intial
-   
+    
     def not_in_queue(self, state, queue):
-        size = queue.qsize()
-        found = False
-        temp_list = []
-        
-        for _ in range(size):
-            s = queue.get()
-            if state == s:
-                found = True
-            temp_list.append(s)
-        
-        for item in temp_list:
-            queue.put(item)
-        
-        return not found  
-
+        elements = list(queue.queue) 
+        return state not in elements
 
     
     def BFS (self):
@@ -109,9 +96,9 @@ class BFSAgent:
 
 
 l = BFSAgent(
-[[3, 2, 8],
- [4, 5, 1],
- [6, 7, 0]]
+[[8, 6, 7],
+ [2, 5, 4],
+ [3, 0, 1]]
 )
 res =l.BFS()
 
