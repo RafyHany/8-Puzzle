@@ -20,9 +20,7 @@ class IdsAgent:
             self.explored = set()
             self.path = []
             self.parent = {}
-            self.get_actual = []
             path, path_length, expand_length, max_depth = self.dfs(limit)
-            print(f"limit: {limit}, path: {path}, path_length: {path_length}, expand_length: {expand_length}, max_depth: {max_depth} , actual:{self.get_actual}\n" )
             if path:
                 end_time = time.time()
                 return path, path_length, expand_length, max_depth, end_time - start_time
@@ -43,7 +41,7 @@ class IdsAgent:
                 return self.path, len(self.path), len(self.explored), max_depth
             if level < limit:
                 for child in self.get_children(current):
-                    if (child[0] not in self.explored or (child[0]  in self.explored and self.level[child[0]] > level+1 )) and (self.not_in_stack(child[0], stack, level)):
+                    if (child[0] not in self.explored or (child[0]  in self.explored and self.level[child[0]] > level + 1 )) and (self.not_in_stack(child[0], stack, level)):
                         stack.append((child[0], level + 1))
                         self.parent[child[0]] = (current, child[1])
         return None, None, len(self.explored), max_depth
@@ -71,15 +69,17 @@ class IdsAgent:
             state = '0' + state
         zero_index = state.index('0')
 
+        if zero_index % 3 != 2:
+            children.append((int(self.swap(state, zero_index, zero_index + 1)), "right"))
         if zero_index + 3 < 9:
             children.append((int(self.swap(state, zero_index, zero_index + 3)), "down"))
+        if zero_index % 3 != 0:
+            children.append((int(self.swap(state, zero_index, zero_index - 1)), "left"))
         if zero_index - 3 >= 0:
             children.append((int(self.swap(state, zero_index, zero_index - 3)), "up"))
 
-        if zero_index % 3 != 2:
-            children.append((int(self.swap(state, zero_index, zero_index + 1)), "right"))
-        if zero_index % 3 != 0:
-            children.append((int(self.swap(state, zero_index, zero_index - 1)), "left"))
+
+
 
         return children
 
@@ -95,13 +95,14 @@ class IdsAgent:
         self.path.reverse()
         return
 
-
-ids = IdsAgent([[3,2,8], [4,5,1], [6,7,0]] )
-print(ids.iterative_dfs())
-328451607
-
-# [[0,3,5], [4,2,8], [6,1,7]] 10
-# [[3,2,8], [4,5,1], [6,7,0]] 12
-#[[3,2,8], [4,5,1], [6,0,7]]
-# ([(305428617, 'right'), (325408617, 'down'), (325418607, 'down'), (325418670, 'right'), (325410678, 'up'), (320415678, 'up'), (302415678, 'left'), (312405678, 'down'), (312045678, 'left'), (12345678, 'up')],
-# ([(305428617, 'right'), (325408617, 'down'), (325418607, 'down'), (325418670, 'right'), (325410678, 'up'), (320415678, 'up'), (302415678, 'left'), (312405678, 'down'), (312045678, 'left'), (12345678, 'up')], 10, 242, 10, 0.001993417739868164)
+#
+# ids = IdsAgent([[8,6,7], [2,5,4], [3,0,1]])
+# print(ids.iterative_dfs())
+#
+#
+# # [[0,3,5], [4,2,8], [6,1,7]] 10
+# # [[3,2,8], [4,5,1], [6,7,0]] 12
+# #[[3,2,8], [4,5,1], [6,0,7]]
+#
+# # ([(305428617, 'right'), (325408617, 'down'), (325418607, 'down'), (325418670, 'right'), (325410678, 'up'), (320415678, 'up'), (302415678, 'left'), (312405678, 'down'), (312045678, 'left'), (12345678, 'up')],
+# # ([(305428617, 'right'), (325408617, 'down'), (325418607, 'down'), (325418670, 'right'), (325410678, 'up'), (320415678, 'up'), (302415678, 'left'), (312405678, 'down'), (312045678, 'left'), (12345678, 'up')], 10, 242, 10, 0.001993417739868164)
