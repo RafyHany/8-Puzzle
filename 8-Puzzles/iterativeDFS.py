@@ -98,8 +98,8 @@ class IdsAgent:
         return
 
 
-ids = IdsAgent([[3,2,8], [4,5,1], [6,7,0]])
-print(ids.iterative_dfs())
+# ids = IdsAgent([[3,2,8], [4,5,1], [6,7,0]])
+# print(ids.iterative_dfs())
 #
 #
 # # [[0,3,5], [4,2,8], [6,1,7]] 10
