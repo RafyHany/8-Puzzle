@@ -45,6 +45,7 @@ class IdsAgent:
                 for child in self.get_children(current):
                     if (child[0] not in self.explored or (child[0]  in self.explored and self.level[child[0]] > level + 1 )) and (self.not_in_stack(child[0], stack, level)):
                         stack.append((child[0], level + 1))
+                        self.level[child[0]] = level + 1
                         self.parent[child[0]] = (current, child[1])
         return None, None, len(self.explored), max_depth
 
@@ -98,10 +99,11 @@ class IdsAgent:
         return
 
 
-# ids = IdsAgent([[3,2,8], [4,5,1], [6,7,0]])
+# ids = IdsAgent([[7,6,3], [2,1,4], [5,8,0]])
 # print(ids.iterative_dfs())
-#
-#
+# #
+# #718654230
+# 763214580
 # # [[0,3,5], [4,2,8], [6,1,7]] 10
 # # [[3,2,8], [4,5,1], [6,7,0]] 12
 # #[[3,2,8], [4,5,1], [6,0,7]] 11
