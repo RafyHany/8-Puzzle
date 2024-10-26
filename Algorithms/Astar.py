@@ -120,12 +120,12 @@ def a_star(initial_board, heuristic_type='manhattan'):
     initial_state_str = board_to_string(initial_board)
     initial_state = PuzzleState(initial_state_str, 0, None, heuristic_type)
 
-    open_set = []
-    heapq.heappush(open_set, initial_state)
+    frontier = []
+    heapq.heappush(frontier, initial_state)
     closed_set = set()
 
-    while open_set:
-        current_state = heapq.heappop(open_set)
+    while frontier:
+        current_state = heapq.heappop(frontier)
 
         if current_state.state_str == "012345678":
             path = []
@@ -151,7 +151,7 @@ def a_star(initial_board, heuristic_type='manhattan'):
 
         for neighbor in current_state.get_neighbors():
             if neighbor.state_str not in closed_set:
-                heapq.heappush(open_set, neighbor)
+                heapq.heappush(frontier, neighbor)
 
     return None, 0, 0, nodes_expanded
 
