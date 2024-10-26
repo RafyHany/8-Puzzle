@@ -2,9 +2,10 @@ from customtkinter import *
 import customtkinter as ctk
 from Algorithms.Astar import *
 from Algorithms.BFS import *
+from Algorithms.dfs import *
+from Algorithms.iterativeDFS import *
 
-
-def show_steps(app, states, time_taken, nodes_expanded, search_depth):
+def show_steps(app, states, time_taken, nodes_expanded, search_depth, algorithm = None):
     steps_frame = ctk.CTkScrollableFrame(app,
                                          fg_color="#540d6e",
                                          corner_radius=0)
@@ -12,24 +13,26 @@ def show_steps(app, states, time_taken, nodes_expanded, search_depth):
 
     for i in range(len(states)):
 
-        state = states[i][0]
+        if algorithm != "DFS":
 
-        st = ctk.CTkFrame(steps_frame,
-                                 fg_color='black',
-                                 width=80,
-                                 height=50)
+            state = states[i][0]
 
-        st.pack(pady=10)
+            st = ctk.CTkFrame(steps_frame,
+                                     fg_color='black',
+                                     width=80,
+                                     height=50)
 
-        state_str = str(state).zfill(9)
-        formatted_state = [state_str[i:i + 3] for i in range(0, len(state_str), 3)]
+            st.pack(pady=10)
+
+            state_str = str(state).zfill(9)
+            formatted_state = [state_str[i:i + 3] for i in range(0, len(state_str), 3)]
 
 
-        state_string = "\n".join([f"[{' '.join(row)}]" for row in formatted_state])
+            state_string = "\n".join([f"[{' '.join(row)}]" for row in formatted_state])
 
-        ctk.CTkLabel(st,
-                     font=("Digital-7 Mono", 28, "bold"),
-                     text=state_string).pack()
+            ctk.CTkLabel(st,
+                         font=("Digital-7 Mono", 28, "bold"),
+                         text=state_string).pack()
 
         if states[i][1] != "":
             direction = ctk.CTkFrame(steps_frame,
@@ -225,16 +228,29 @@ def solve(app, algorithm, entries):
                                     command=stop_sequence_action)
         stop_button.place(relx=0.5225, rely=0.3, anchor="center")
 
+        initial_board = string_to_board(state_str)
+
         if algorithm == "A*" and app.selected_heuristic.get() != "":
-            initial_board = string_to_board(state_str)
             states, moves, timeTaken, nodes = a_star(initial_board, app.selected_heuristic.get())
             show_steps(app, states, timeTaken, nodes, moves)
             states = [state[0] for state in states]
             show_states(app, states, 0)
 
         elif algorithm == "BFS":
-            initial_board = string_to_board(state_str)
+            pass
             result = BFSAgent(initial_board).BFS_()
+            show_steps(app, result[0], result[4], result[2], result[1])
+            states = [str(state[0]).zfill(9) for state in result[0]]
+            show_states(app, states, 0)
+
+        elif algorithm == "DFS":
+            result = DfsAgent(initial_board).dfs()
+            #show_steps(app, result[0], result[4], result[2], result[1], "DFS")
+            states = [str(state[0]).zfill(9) for state in result[0]]
+            #show_states(app, states, 0)
+
+        elif algorithm == "Iterative DFS":
+            result = IdsAgent(initial_board).iterative_dfs()
             show_steps(app, result[0], result[4], result[2], result[1])
             states = [str(state[0]).zfill(9) for state in result[0]]
             show_states(app, states, 0)

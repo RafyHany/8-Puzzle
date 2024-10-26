@@ -95,12 +95,12 @@ class BFSAgent:
 
 
 
-
-l = BFSAgent(
-[[1, 8, 2],
- [0, 4, 3],
- [7, 6, 5]]
-)
-res =l.BFS_()
-
-print(res)
+#
+# l = BFSAgent(
+# [[1, 8, 2],
+#  [0, 4, 3],
+#  [7, 6, 5]]
+# )
+# res =l.BFS_()
+#
+# print(res)
