@@ -5,7 +5,42 @@ from Algorithms.BFS import *
 from Algorithms.dfs import *
 from Algorithms.iterativeDFS import *
 
-def show_steps(app, states, time_taken, nodes_expanded, search_depth, algorithm = None):
+
+def create_step_viewer(app, result):
+    result_begin = 0
+    result_limit = 30  # End limit
+
+    def show_next_batch():
+        nonlocal result_limit, result_begin  # Added result_begin here
+        if result_limit < len(result[0]):
+            show_steps(app, result[0][result_begin:result_limit], result[4], result[2], result[1])
+            result_begin = result_limit
+            result_limit += 30
+
+        # Disable button if we've shown everything
+        if result_limit >= len(result[0]):
+            next_button.configure(state="disabled")
+
+    # Create the button
+    next_button = ctk.CTkButton(
+        master=app,
+        width=80,
+        height=35,
+        corner_radius=25,
+        fg_color="#ee4266",
+        border_color="#c7ef00",
+        hover_color="#a1286a",
+        text="Get Next Batch",
+        font=("Digital-7 Mono", 20, "bold"),
+        command=show_next_batch
+    )
+    next_button.place(relx=0.4, rely=0.8)
+
+    # Show first batch immediately
+    show_next_batch()
+
+
+def show_steps(app, states, time_taken, nodes_expanded, search_depth):
     steps_frame = ctk.CTkScrollableFrame(app,
                                          fg_color="#540d6e",
                                          corner_radius=0)
@@ -13,26 +48,22 @@ def show_steps(app, states, time_taken, nodes_expanded, search_depth, algorithm 
 
     for i in range(len(states)):
 
-        if algorithm != "DFS":
+        state = states[i][0]
 
-            state = states[i][0]
+        st = ctk.CTkFrame(steps_frame,
+                          fg_color='black',
+                          width=80,
+                          height=50)
 
-            st = ctk.CTkFrame(steps_frame,
-                                     fg_color='black',
-                                     width=80,
-                                     height=50)
+        st.pack(pady=10)
 
-            st.pack(pady=10)
+        state_str = str(state).zfill(9)
+        formatted_state = [state_str[i:i + 3] for i in range(0, len(state_str), 3)]
+        state_string = "\n".join([f"[{' '.join(row)}]" for row in formatted_state])
 
-            state_str = str(state).zfill(9)
-            formatted_state = [state_str[i:i + 3] for i in range(0, len(state_str), 3)]
-
-
-            state_string = "\n".join([f"[{' '.join(row)}]" for row in formatted_state])
-
-            ctk.CTkLabel(st,
-                         font=("Digital-7 Mono", 28, "bold"),
-                         text=state_string).pack()
+        ctk.CTkLabel(st,
+                     font=("Digital-7 Mono", 28, "bold"),
+                     text=state_string).pack()
 
         if states[i][1] != "":
             direction = ctk.CTkFrame(steps_frame,
@@ -47,7 +78,7 @@ def show_steps(app, states, time_taken, nodes_expanded, search_depth, algorithm 
                          text=f"{i + 1} - {states[i][1]}").pack()
 
     results = ctk.CTkFrame(app,
-                        fg_color="#540d6e")
+                           fg_color="#540d6e")
 
     results.place(relx=0.7, rely=0.7)
 
@@ -245,9 +276,13 @@ def solve(app, algorithm, entries):
 
         elif algorithm == "DFS":
             result = DfsAgent(initial_board).dfs()
-            #show_steps(app, result[0], result[4], result[2], result[1], "DFS")
-            states = [str(state[0]).zfill(9) for state in result[0]]
-            #show_states(app, states, 0)
+            if len(result[0]) > 30:
+                create_step_viewer(app, result)
+            else:
+                show_steps(app, result[0], result[4], result[2], result[1])
+
+            # states = [str(state[0]).zfill(9) for state in result[0]]
+            # show_states(app, states[:51], 0)
 
         elif algorithm == "Iterative DFS":
             result = IdsAgent(initial_board).iterative_dfs()
