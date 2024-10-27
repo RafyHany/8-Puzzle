@@ -8,20 +8,20 @@ from Algorithms.iterativeDFS import *
 
 def create_step_viewer(app, result):
     result_begin = 0
-    result_limit = 30  # End limit
+    result_limit = 30
 
     def show_next_batch():
-        nonlocal result_limit, result_begin  # Added result_begin here
+        nonlocal result_limit, result_begin
         if result_limit < len(result[0]):
             show_steps(app, result[0][result_begin:result_limit], result[4], result[2], result[1])
             result_begin = result_limit
             result_limit += 30
 
-        # Disable button if we've shown everything
+
         if result_limit >= len(result[0]):
             next_button.configure(state="disabled")
 
-    # Create the button
+
     next_button = ctk.CTkButton(
         master=app,
         width=80,
@@ -36,7 +36,7 @@ def create_step_viewer(app, result):
     )
     next_button.place(relx=0.4, rely=0.8)
 
-    # Show first batch immediately
+
     show_next_batch()
 
 
@@ -281,6 +281,24 @@ def solve(app, algorithm, entries):
             else:
                 show_steps(app, result[0], result[4], result[2], result[1])
 
+            ctk.CTkFrame(master=app,
+                         corner_radius=0,
+                         width=200,
+                         height=50,
+                         fg_color="#f78a53").place(relx=0.195, rely=0.5245, anchor="center")
+
+            ctk.CTkFrame(master=app,
+                         corner_radius=0,
+                         width=200,
+                         height=50,
+                         fg_color="#ffd23f").place(relx=0.2, rely=0.53, anchor="center")
+
+            ctk.CTkLabel(master=app,
+                         text=f"Moves: {result[1]}",
+                         text_color="white",
+                         bg_color="#ffd23f",
+                         font=("Digital-7 Mono", 28, "bold")).place(relx=0.2, rely=0.53, anchor="center")
+
             # states = [str(state[0]).zfill(9) for state in result[0]]
             # show_states(app, states[:51], 0)
 
@@ -381,6 +399,3 @@ def initiate_gui():
     btn.place(relx=0.5225, rely=0.22, anchor="center")
 
     app.mainloop()
-
-
-initiate_gui()

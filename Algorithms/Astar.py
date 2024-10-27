@@ -155,9 +155,3 @@ def a_star(initial_board, heuristic_type='manhattan'):
 
     return None, 0, 0, nodes_expanded
 
-
-# Usage
-# puzzle = [[5,8,3], [1,4,2], [7, 6, 0]]
-# solution, steps, time_taken, expanded_nodes = a_star(puzzle, 'euclidean')
-# print(f"Solution: {solution}")
-# print(f"Number of nodes expanded: {expanded_nodes}")

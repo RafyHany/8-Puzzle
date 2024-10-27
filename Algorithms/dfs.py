@@ -73,6 +73,5 @@ class DfsAgent:
             state = self.parent[state][0]
         self.path.reverse()
         return
-#
-# ids = DfsAgent([[8,6,7], [2,5,4], [3,0,1]])
-# print(ids.dfs())
+
+
