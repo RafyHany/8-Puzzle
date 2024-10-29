@@ -360,6 +360,11 @@ def stop_sequence_action():
     stop_sequence = True
 
 
+def restart_app(app):
+    app.destroy()
+    initiate_gui()
+
+
 def on_algorithm_change(choice):
     global selected_algorithm_result
     selected_algorithm_result = choice
@@ -397,5 +402,17 @@ def initiate_gui():
                         font=("Digital-7 Mono", 20, "bold"),
                         command=lambda: solve(app, option_algorithm.get(), entries))
     btn.place(relx=0.5225, rely=0.22, anchor="center")
+
+    restart_button = ctk.CTkButton(master=app,
+                                   width=80,
+                                   height=35,
+                                   corner_radius=25,
+                                   fg_color="#00a8cc",
+                                   border_color="#c7ef00",
+                                   hover_color="#007399",
+                                   text="New Puzzle",
+                                   font=("Digital-7 Mono", 20, "bold"),
+                                   command=lambda: restart_app(app))
+    restart_button.place(relx=0.8, rely=0.2, anchor="center")
 
     app.mainloop()
